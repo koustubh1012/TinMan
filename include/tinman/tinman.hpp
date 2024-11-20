@@ -6,7 +6,7 @@
 #ifndef TINMAN_HPP
 #define TINMAN_HPP
 
-#include "robot_navigation.hpp"
+#include "tinman_navigation.hpp"
 #include "can_detection.hpp"
 #include "manipulation.hpp"
 

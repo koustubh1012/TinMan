@@ -15,3 +15,8 @@ void TinMan::disposeCans() {
 void TinMan::startNavigation() {
     // Stub for starting navigation
 }
+
+int main(){
+
+    return 0;
+}
