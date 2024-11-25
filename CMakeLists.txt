@@ -16,24 +16,23 @@ find_package(cv_bridge REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(gazebo_msgs REQUIRED)
 find_package(ament_cmake_gtest REQUIRED)
+find_package(catch_ros2 REQUIRED)
 
 
-add_executable(tinman src/tinman.cpp
+
+add_executable(tinman_exec src/tinman.cpp
                       src/tinman_navigation.cpp
                       src/can_detection.cpp
                       src/manipulation.cpp)
 
 
-ament_target_dependencies(tinman rclcpp std_msgs geometry_msgs sensor_msgs image_transport cv_bridge OpenCV nav_msgs gazebo_msgs)
+ament_target_dependencies(tinman_exec rclcpp std_msgs geometry_msgs sensor_msgs image_transport cv_bridge OpenCV nav_msgs gazebo_msgs)
 
-install(TARGETS
-  tinman
-  DESTINATION lib/${PROJECT_NAME}
-)
-install(DIRECTORY
-  include/
-  DESTINATION include
-)
+add_executable(level2_integration_test test/level2_integration_test.cpp)
+ament_target_dependencies(level2_integration_test rclcpp std_msgs geometry_msgs )
+target_link_libraries(level2_integration_test catch_ros2::catch_ros2_with_node_main  )
+
+
 include_directories(include/tinman)
 
 
@@ -66,5 +65,23 @@ if(BUILD_TESTING)
     DESTINATION lib/${PROJECT_NAME})
   # ament_lint_auto_find_test_dependencies()
 endif()
+
+catch_ros2_add_integration_test (Level2_Integration_Test
+  LAUNCH_FILE integration_test.launch.yaml  # example in YAML
+  )
+
+install(TARGETS
+  tinman_exec
+  level2_integration_test
+  DESTINATION lib/${PROJECT_NAME}
+)
+install(DIRECTORY
+  include/
+  DESTINATION include
+)
+install(DIRECTORY 
+  launch/
+  DESTINATION share/${PROJECT_NAME}/launch
+)
 
 ament_package()

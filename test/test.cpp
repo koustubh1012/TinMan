@@ -16,7 +16,7 @@
 //////////////////////////////////////////
 //TEST #1
 //////////////////////////////////////////
-TEST(CanDetectionTest, testTrackCentroid) {
+TEST(CanDetectionTest, testTrackCentroid_1) {
     // Load the test image
     cv::Mat image = cv::imread(std::string(TEST_SRC_DIR)+"/test2.png"); // Ensure test2.jpg exists in the correct path
     ASSERT_FALSE(image.empty()) << "Error: Unable to load image for testing!";
@@ -47,7 +47,7 @@ TEST(CanDetectionTest, testTrackCentroid) {
 //////////////////////////////////////////
 //TEST #2
 //////////////////////////////////////////
-TEST(CanDetectionTest, testTrackCentroid) {
+TEST(CanDetectionTest, testTrackCentroid_2) {
     // Load the test image
     cv::Mat image = cv::imread(std::string(TEST_SRC_DIR)+"/test3.png"); // Ensure test3.jpg exists in the correct path
     ASSERT_FALSE(image.empty()) << "Error: Unable to load image for testing!";

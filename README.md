@@ -43,3 +43,56 @@ For detailed quad chart, refer to the following presentation: [Quad Chart](https
 2. OpenCV: Follow the instructions on this [website](https://www.geeksforgeeks.org/how-to-install-opencv-in-c-on-linux/) to install OpenCV. This is required to detect the cans using classical image processing algorithms
 
 3. [Gazebo](https://classic.gazebosim.org/tutorials?tut=install_ubuntu) : Gazebo latest version was installed for deploying simulation environments and running the models in the project package. [website]
+
+## Steps to recreate the output
+
+### Building the code
+Before running any of the following, ensure that you are in the main working directory (Root Folder of the directory). To build the project, execute the following commands
+
+```bash
+    # Create a working directory:
+    mkdir -p ~/ros_ws/src
+    # got ho src directory
+    cd ~/ros_ws/src
+    # Clone the git repository in the src directory
+    git clone https://github.com/koustubh1012/TinMan
+    # now go back to ros_ws directory and download all the dependencies
+    cd .. 
+    rosdep install -i --from-path src --rosdistro humble -y
+    # build the package
+    colcon build --packages-select tinman
+    # source underlay and overlay
+    source /opt/ros/humble/setup.sh
+    source install/setup.bash
+```
+### Generating documentation 
+To generate and view the Doxygen documentation of the project, run the following commands.
+
+```bash
+    #Work in Progress
+```
+### Running the Program Executable 
+
+To recreate the demo, use the following command:
+
+```bash
+    #work in progress
+```
+
+### To run the tests 
+Test Driven Development process was followed and the unit tests can be run by the following command:
+
+```bash
+    cd ~/ros_ws
+    colcon test --packages-select tinman
+
+```
+
+## Known Issues / bugs
+There was an issue before of not executing the level 2 integration test. This was mainly due to the name conflict of package and executable. They should not be same. 
+    
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Disclaimer
+This software is provided "as is," without any warranties or conditions, express or implied. By using this software, you acknowledge that Acme Robotics is not liable for any damages or issues arising from its use. Users are responsible for ensuring the software’s suitability and safety for their specific applications, especially in environments with humans.
