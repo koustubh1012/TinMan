@@ -20,7 +20,7 @@ find_package(catch_ros2 REQUIRED)
 
 
 
-add_executable(tinman_exec src/tinman.cpp
+add_executable(tinman_exec src/main.cpp
                       src/tinman_navigation.cpp
                       src/can_detection.cpp
                       src/manipulation.cpp)
