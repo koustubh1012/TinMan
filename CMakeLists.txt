@@ -20,7 +20,7 @@ find_package(catch_ros2 REQUIRED)
 
 
 
-add_executable(tinman_exec src/main.cpp
+add_executable(tinman_exec src/tinman.cpp
                       src/tinman_navigation.cpp
                       src/can_detection.cpp
                       src/manipulation.cpp)
@@ -82,6 +82,21 @@ install(DIRECTORY
 install(DIRECTORY 
   launch/
   DESTINATION share/${PROJECT_NAME}/launch
+)
+
+install(DIRECTORY
+  models/
+  DESTINATION share/${PROJECT_NAME}/models
+)
+
+install(DIRECTORY
+  worlds/
+  DESTINATION share/${PROJECT_NAME}/worlds
+)
+
+install(FILES
+  worlds/cafeteria.world
+  DESTINATION share/${PROJECT_NAME}/worlds
 )
 
 ament_package()
