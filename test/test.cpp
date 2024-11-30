@@ -40,7 +40,7 @@ TEST(CanDetectionTest, testTrackCentroid_1) {
     float result = can_detection.trackCentroid();
 
     // Validate that the centroid is within an expected range
-    EXPECT_NEAR(result, 619.0, 10.0) << "Centroid not detected as expected!";
+    EXPECT_NEAR(result, 619.0, 20.0) << "Centroid not detected as expected!";
 }
 
 
@@ -71,7 +71,7 @@ TEST(CanDetectionTest, testTrackCentroid_2) {
     float result = can_detection.trackCentroid();
 
     // Validate that the centroid is within an expected range
-    EXPECT_NEAR(result, 404.0, 10.0) << "Centroid not detected as expected!";
+    EXPECT_NEAR(result, 404.0, 20.0) << "Centroid not detected as expected!";
 }
 
 

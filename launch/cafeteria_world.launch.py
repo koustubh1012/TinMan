@@ -33,8 +33,6 @@ def generate_launch_description():
 
     robot_state_publisher = IncludeLaunchDescription(PythonLaunchDescriptionSource(os.path.join(launch_file_dir, 'robot_state_publisher.launch.py')))
 
-    spawn_turtlebot3 = IncludeLaunchDescription(PythonLaunchDescriptionSource(os.path.join(launch_file_dir, 'spawn_turtlebot3.launch.py')))
-
     spawn_bin= Node(
             package='gazebo_ros',
             executable='spawn_entity.py',
@@ -54,11 +52,7 @@ def generate_launch_description():
     ld.add_action(gzservercmd)
     ld.add_action(gzclientcmd)
     ld.add_action(robot_state_publisher)
-    ld.add_action(spawn_turtlebot3)
     ld.add_action(spawn_bin)
+    ld.add_action(spawn_turtlebot3)
 
     return ld
-
-
-
-
