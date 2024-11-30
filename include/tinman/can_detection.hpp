@@ -47,7 +47,7 @@
  */
 class CanDetection {
     private:
-        sensor_msgs::msg::Image camera_frame; ///< Image data from the camera.
+        cv::Mat camera_frame; ///< Image data from the camera.
         std::vector<std::string> detected_objects; ///< List of detected objects.
 
     public:

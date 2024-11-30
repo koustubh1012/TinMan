@@ -12,6 +12,7 @@
  * @brief Test for the CanDetection class
  */
 
+// TEST PASSING 11/29/2024
 
 //////////////////////////////////////////
 //TEST #1
@@ -43,6 +44,7 @@ TEST(CanDetectionTest, testTrackCentroid_1) {
     EXPECT_NEAR(result, 619.0, 20.0) << "Centroid not detected as expected!";
 }
 
+// TEST PASSING 11/29/2024
 
 //////////////////////////////////////////
 //TEST #2
@@ -74,11 +76,11 @@ TEST(CanDetectionTest, testTrackCentroid_2) {
     EXPECT_NEAR(result, 404.0, 20.0) << "Centroid not detected as expected!";
 }
 
+// TEST PASSING 11/29/2024
 
 //////////////////////////////////////////
 //TEST #3
 //////////////////////////////////////////
-
 TEST(CanDetectionTest, testTrackCentroid) {
     // Load the test image
     cv::Mat image = cv::imread(std::string(TEST_SRC_DIR)+"/test4.png"); // Ensure test4.jpg exists in the correct path
