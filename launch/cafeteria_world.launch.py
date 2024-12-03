@@ -51,8 +51,8 @@ def generate_launch_description():
 
     ld.add_action(gzservercmd)
     ld.add_action(gzclientcmd)
+    ld.add_action(spawn_turtlebot3)
     ld.add_action(robot_state_publisher)
     ld.add_action(spawn_bin)
-    ld.add_action(spawn_turtlebot3)
 
     return ld
