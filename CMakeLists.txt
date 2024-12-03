@@ -94,6 +94,10 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}/worlds
 )
 
+install(DIRECTORY
+  maps/
+  DESTINATION share/${PROJECT_NAME}/maps)
+
 install(FILES
   worlds/cafeteria.world
   DESTINATION share/${PROJECT_NAME}/worlds
