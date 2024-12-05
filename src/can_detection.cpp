@@ -35,6 +35,10 @@ float CanDetection::trackCentroid() {
     // Threshold the HSV image to get only green colors
     cv::inRange(hsv_frame, lower_green, upper_green, mask);
 
+    // Noise reduction
+    cv::GaussianBlur(mask, mask, cv::Size(5, 5), 0);
+    cv::morphologyEx(mask, mask, cv::MORPH_CLOSE, cv::Mat(), cv::Point(-1, -1), 2);
+
     // Find contours in the binary mask
     std::vector<std::vector<cv::Point>> contours;
     cv::findContours(mask, contours, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
@@ -49,7 +53,7 @@ float CanDetection::trackCentroid() {
     int largest_contour_idx = -1;
     for (size_t i = 0; i < contours.size(); ++i) {
         double area = cv::contourArea(contours[i]);
-        if (area > max_area) {
+        if (area > max_area && area > 100000) {
             max_area = area;
             largest_contour_idx = static_cast<int>(i);
         }
@@ -74,8 +78,8 @@ float CanDetection::trackCentroid() {
     cv::circle(camera_frame, cv::Point(centroid_x, centroid_y), 5, cv::Scalar(0, 0, 255), -1); // Red circle
 
     // Display the result with the bounding box
-    cv::imshow("Green Can Detection", camera_frame);
-    cv::waitKey(1); // Allow OpenCV to process GUI events
+    // cv::imshow("Green Can Detection", camera_frame);
+    // cv::waitKey(1); // Allow OpenCV to process GUI events
 
     std::cout << "Centroid of the green can: (" << centroid_x << ", " << centroid_y << ")" << std::endl;
 
