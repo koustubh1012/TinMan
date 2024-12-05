@@ -8,13 +8,18 @@
 
 #include "tinman_navigation.hpp"
 #include "can_detection.hpp"
+#include "rclcpp/rclcpp.hpp"
 #include "manipulation.hpp"
+#include <sensor_msgs/msg/image.hpp>
+#include <opencv2/opencv.hpp>
+#include <cv_bridge/cv_bridge.h>
+#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 
 /**
  * @class TinMan
  * @brief Main class controlling the TinMan robot, including navigation, detection, and manipulation subsystems.
  */
-class TinMan {
+class TinMan : public rclcpp::Node {
 private:
     int cans_collected; ///< Number of cans collected.
     int cans_trashed; ///< Number of cans disposed.
@@ -43,6 +48,15 @@ public:
      * @brief Starts the navigation process.
      */
     void startNavigation();
+
+    /**
+     * @brief Callback function for the image subscriber.
+     * @param msg Image message received from the camera.
+     */
+    void imageCallback(const sensor_msgs::msg::Image::SharedPtr msg);
+
+    rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initial_pose_pub_; ///< Publisher for the initial pose.
+    rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_sub_; ///< Subscriber for the camera feed.
 };
 
 #endif // TINMAN_HPP
