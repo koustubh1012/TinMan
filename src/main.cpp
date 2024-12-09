@@ -1,18 +1,10 @@
-#include "can_detection.hpp"
-#include <rclcpp/rclcpp.hpp>
+#include "rclcpp/rclcpp.hpp"
+#include "tinman.hpp"
 
-int main(int argc, char *argv[]) {
-    // Initialize the ROS 2 client library
-    rclcpp::init(argc, argv);
-
-    // Create a shared pointer to the CanDetection node
-    auto can_detection_node = std::make_shared<CanDetection>();
-
-    // Spin the node to process callbacks
-    rclcpp::spin(can_detection_node);
-
-    // Shut down the ROS 2 client library
-    rclcpp::shutdown();
-
+int main(int argc, char **argv) {
+    rclcpp::init(argc, argv); // Initialize ROS 2
+    auto node = std::make_shared<TinMan>(); // Create an instance of the TinMan class
+    rclcpp::spin(node); // Keep the node alive and process callbacks
+    rclcpp::shutdown(); // Shutdown ROS 2
     return 0;
 }
