@@ -24,7 +24,7 @@ private:
     int cans_collected; ///< Number of cans collected.
     int cans_trashed; ///< Number of cans disposed.
 
-    RobotNavigation nav_obj; ///< Navigation subsystem object.
+    std::shared_ptr<RobotNavigation> nav_obj; ///< Navigation subsystem object.
     CanDetection detection_obj; ///< Detection subsystem object.
     Manipulation manipulator_obj; ///< Manipulation subsystem object.
 
@@ -48,6 +48,8 @@ public:
      * @brief Starts the navigation process.
      */
     void startNavigation();
+
+    void moveToGoal();
 
     /**
      * @brief Callback function for the image subscriber.
