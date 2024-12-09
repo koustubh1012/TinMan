@@ -6,59 +6,45 @@
 #ifndef TINMAN_HPP
 #define TINMAN_HPP
 
-#include "tinman_navigation.hpp"
-#include "can_detection.hpp"
+#pragma once
+
 #include "rclcpp/rclcpp.hpp"
-#include "manipulation.hpp"
+#include "can_detection.hpp"
 #include <sensor_msgs/msg/image.hpp>
+#include <nav_msgs/msg/odometry.hpp>
 #include <opencv2/opencv.hpp>
 #include <cv_bridge/cv_bridge.h>
-#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
+#include "tinman_navigation.hpp"
+#include "manipulation.hpp"
+#include <cmath>
 
-/**
- * @class TinMan
- * @brief Main class controlling the TinMan robot, including navigation, detection, and manipulation subsystems.
- */
+
 class TinMan : public rclcpp::Node {
-private:
-    int cans_collected; ///< Number of cans collected.
-    int cans_trashed; ///< Number of cans disposed.
-
-    std::shared_ptr<RobotNavigation> nav_obj; ///< Navigation subsystem object.
-    CanDetection detection_obj; ///< Detection subsystem object.
-    Manipulation manipulator_obj; ///< Manipulation subsystem object.
-
 public:
-    /**
-     * @brief Constructor for the TinMan class.
-     */
     TinMan();
+    ~TinMan() = default;
 
-    /**
-     * @brief Initiates the can collection process.
-     */
-    void collectCans();
+private:
+    // Subscriptions
+    rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_sub_;
+    rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr pose_subscription_;
 
-    /**
-     * @brief Disposes of the collected cans.
-     */
-    void disposeCans();
+    // Helpers
+    CanDetection detector_;
+    std::shared_ptr<RobotNavigation> nav_obj_;
+    std::shared_ptr<Manipulation> manipulator_obj_;
 
-    /**
-     * @brief Starts the navigation process.
-     */
-    void startNavigation();
+    // Pose and navigation
+    geometry_msgs::msg::Pose current_pose_;
+    double goal_x, goal_y;
+    const double tolerance;
+    bool nav_to_bin;
 
-    void moveToGoal();
-
-    /**
-     * @brief Callback function for the image subscriber.
-     * @param msg Image message received from the camera.
-     */
+    // Methods
+    geometry_msgs::msg::Pose getCurrentPosition() const;
+    void poseCallback(const nav_msgs::msg::Odometry::SharedPtr msg);
     void imageCallback(const sensor_msgs::msg::Image::SharedPtr msg);
-
-    rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initial_pose_pub_; ///< Publisher for the initial pose.
-    rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_sub_; ///< Subscriber for the camera feed.
+    void testNavigation(double x, double y);
 };
 
 #endif // TINMAN_HPP
