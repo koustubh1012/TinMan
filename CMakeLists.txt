@@ -17,6 +17,10 @@ find_package(OpenCV REQUIRED)
 find_package(gazebo_msgs REQUIRED)
 find_package(ament_cmake_gtest REQUIRED)
 find_package(catch_ros2 REQUIRED)
+find_package(rclcpp_action REQUIRED)
+find_package(nav2_msgs REQUIRED)
+
+
 
 
 
@@ -26,10 +30,10 @@ add_executable(tinman_exec src/tinman.cpp
                       src/manipulation.cpp)
 
 
-ament_target_dependencies(tinman_exec rclcpp std_msgs geometry_msgs sensor_msgs image_transport cv_bridge OpenCV nav_msgs gazebo_msgs)
+ament_target_dependencies(tinman_exec rclcpp std_msgs geometry_msgs sensor_msgs image_transport cv_bridge OpenCV nav_msgs gazebo_msgs rclcpp_action nav2_msgs)
 
 add_executable(level2_integration_test test/level2_integration_test.cpp)
-ament_target_dependencies(level2_integration_test rclcpp std_msgs geometry_msgs )
+ament_target_dependencies(level2_integration_test rclcpp std_msgs geometry_msgs gazebo_msgs sensor_msgs image_transport cv_bridge OpenCV nav_msgs rclcpp_action nav2_msgs)
 target_link_libraries(level2_integration_test catch_ros2::catch_ros2_with_node_main  )
 
 
@@ -56,7 +60,7 @@ if(BUILD_TESTING)
 
   #Add Gtest
   ament_add_gtest(${PROJECT_NAME}_test ${TEST_FILE})
-  ament_target_dependencies(${PROJECT_NAME}_test rclcpp std_msgs geometry_msgs sensor_msgs image_transport cv_bridge OpenCV nav_msgs gazebo_msgs)
+  ament_target_dependencies(${PROJECT_NAME}_test rclcpp std_msgs geometry_msgs sensor_msgs image_transport cv_bridge OpenCV nav_msgs gazebo_msgs rclcpp_action nav2_msgs)
   target_include_directories(${PROJECT_NAME}_test PUBLIC include/tinman)
 
   target_compile_definitions(${PROJECT_NAME}_test PUBLIC "TEST_SRC_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/test/\"")
@@ -102,5 +106,15 @@ install(FILES
   worlds/cafeteria.world
   DESTINATION share/${PROJECT_NAME}/worlds
 )
+#######################
 
+add_executable(test_can_detection src/test_can_detection.cpp
+                                  src/can_detection.cpp
+                                  src/tinman_navigation.cpp
+                                  src/manipulation.cpp)
+ament_target_dependencies(test_can_detection rclcpp sensor_msgs image_transport 
+                          cv_bridge OpenCV nav_msgs gazebo_msgs rclcpp_action nav2_msgs)
+install(TARGETS test_can_detection DESTINATION lib/${PROJECT_NAME})
+
+#################
 ament_package()
