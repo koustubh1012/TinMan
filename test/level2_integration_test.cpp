@@ -1,6 +1,6 @@
 /**
  * @file level2_integration_test.cpp
- * @brief This cpp file is a level 2 integration file to verify the unit test of publishing topic "cmd_vel".
+ * @brief This cpp file is a level2 integration file to verify the unit test of publishing topic "cmd_vel"
  */
 
 #include <catch_ros2/catch_ros2.hpp>
@@ -11,18 +11,16 @@
 #include <std_msgs/msg/string.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 
-#include "tinman.hpp"
-
 using namespace std::chrono_literals;
 using std_msgs::msg::String;
 
 ////////////////////////////////////////////////
 // Define Fixture
 ////////////////////////////////////////////////
-auto Logger = rclcpp::get_logger("");  // create an initial Logger
+auto Logger = rclcpp::get_logger("");  // Create an initial Logger
 
 /**
- * @brief Class MyTestsFixture to make a test fixture
+ * @brief Class MyTestsFixture to create a test fixture
  */
 class MyTestsFixture {
  public:
@@ -30,91 +28,70 @@ class MyTestsFixture {
    * @brief Construct a new MyTestsFixture object
    */
   MyTestsFixture() {
-    /**
-     * 1.) Create the node that performs the test (aka Integration test node)
-     */
-    testerNode = rclcpp::Node::make_shared("Level2IntegrationTest");
-    Logger = testerNode->get_logger();  // make sure messages will appear in rqt_console
 
-    /**
-     * 2.) Declare a parameter for the duration of the test
-     */
+    testerNode = rclcpp::Node::make_shared("Level2IntegrationTest");
+    Logger = testerNode->get_logger();  // Ensure messages will appear in rqt_console
+
     testerNode->declare_parameter<double>("test_duration");
 
-    /**
-     * 3.) Get the test duration value
-     */
-    TEST_DURATION = testerNode->get_parameter("test_duration").get_parameter_value().get<double>();
-    RCLCPP_INFO_STREAM(Logger, "Got test_duration =" << TEST_DURATION);
+    TEST_DURATION = testerNode->get_parameter("test_duration")
+                        .get_parameter_value()
+                        .get<double>();
+    RCLCPP_INFO_STREAM(Logger, "Got test_duration = " << TEST_DURATION);
+
+    rclcpp::sleep_for(3s);  // Sleep for 1 second
+
+    subscriber = testerNode->create_subscription<geometry_msgs::msg::Twist>(
+        "cmd_vel", 10,
+        [this](const geometry_msgs::msg::Twist &msg) {
+          RCLCPP_INFO(Logger, "INSIDE CALLBACK");
+        });
+
+    std::string topic_name = "/cmd_vel";
+    size_t publisher_count = testerNode->count_publishers(topic_name);
+
+    if (publisher_count > 0) {
+      RCLCPP_INFO_STREAM(Logger, "Found publisher for topic " << topic_name);
+      got_topic = true;
+    }
+    else {
+      RCLCPP_INFO_STREAM(Logger, "No publisher found for topic " << topic_name);
+    }
   }
 
   ~MyTestsFixture() {}
 
  protected:
   double TEST_DURATION;
+  bool got_topic = false;  // Flag to track if a valid message was received
   rclcpp::Node::SharedPtr testerNode;
+  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr subscriber;
 };
 
 ////////////////////////////////////////////////
-// Test Case: Verify cmd_vel topic behavior
+// Test Case 1
 ////////////////////////////////////////////////
 
 TEST_CASE_METHOD(MyTestsFixture, "test topic cmd_vel", "[topic]") {
-  /**
-   * Flag to indicate if a message was received and its content verified
-   */
-  bool message_received = false;
 
-  /**
-   * Subscribe to the cmd_vel topic
-   */
-  auto subscriber = testerNode->create_subscription<geometry_msgs::msg::Twist>(
-      "cmd_vel", 10,
-      [&message_received](const geometry_msgs::msg::Twist msg) {
-        RCLCPP_INFO(Logger, "Received cmd_vel message: linear.x=%.2f, angular.z=%.2f",
-                    msg.linear.x, msg.angular.z);
-        
-        // Validate the received message content
-        if (msg.linear.x == 1.0 && msg.angular.z == 0.5) {
-          message_received = true;
-        }
-      });
-
-  /**
-   * Create a publisher to send data to the cmd_vel topic
-   */
-  auto publisher = testerNode->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
-
-  /**
-   * Publish a message to cmd_vel
-   */
-  auto publish_message = [&publisher]() {
-    auto msg = geometry_msgs::msg::Twist();
-    msg.linear.x = 1.0;  // Set linear velocity
-    msg.angular.z = 0.5; // Set angular velocity
-    RCLCPP_INFO(Logger, "Publishing cmd_vel: linear.x=1.0, angular.z=0.5");
-    publisher->publish(msg);
-  };
-
-  /**
-   * Perform the test by publishing and verifying the message
-   */
-  rclcpp::Rate rate(5.0); // 5Hz
+  rclcpp::Rate rate(5.0);  // 5Hz checks
   auto start_time = rclcpp::Clock().now();
   auto duration = rclcpp::Clock().now() - start_time;
   auto timeout = rclcpp::Duration::from_seconds(TEST_DURATION);
-  RCLCPP_INFO(Logger, "Starting test: timeout=%.2f seconds", timeout.seconds());
 
-  while (!message_received && (duration < timeout)) {
-    publish_message(); // Publish a message to cmd_vel
-    rclcpp::spin_some(testerNode); // Process callbacks
-    rate.sleep();
+  RCLCPP_INFO_STREAM(Logger, "Starting test: duration = " << duration.seconds()
+                                                          << " timeout=" << timeout.seconds());
+
+  while (!got_topic && (duration < timeout)) {
+    rclcpp::spin_some(testerNode);  // Process callbacks
+    rate.sleep();  // Sleep for the defined rate
     duration = rclcpp::Clock().now() - start_time;
   }
 
-  RCLCPP_INFO(Logger, "Test finished: duration=%.2f seconds, message_received=%s",
-              duration.seconds(), message_received ? "true" : "false");
+  RCLCPP_INFO_STREAM(Logger, "Test finished: duration = " << duration.seconds()
+                                                          << ", got_topic = " << std::boolalpha
+                                                          << got_topic);
 
-  // Assert that the message was received and its content was valid
-  CHECK(message_received);
+  // Assert that a valid topic is published
+  CHECK(got_topic);
 }
