@@ -1,5 +1,5 @@
 import os
-
+import random
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, ExecuteProcess
@@ -25,7 +25,7 @@ def generate_launch_description():
 
     spawn_turtlebot3 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(launch_file_dir, 'spawn_turtlebot3.launch.py')),
-        launch_arguments={'x_pose': '0.0', 'y_pose': '0.0', 'z_pose': '0.0', 'model': TURTLEBOT3_MODEL, 'use_sim_time': use_sim_time}.items()
+        launch_arguments={'x_pose': '-4.0', 'y_pose': '-1.0', 'z_pose': '0.0', 'model': TURTLEBOT3_MODEL, 'use_sim_time': use_sim_time}.items()
     )
 
     gzservercmd= IncludeLaunchDescription(
@@ -37,6 +37,9 @@ def generate_launch_description():
 
     robot_state_publisher = IncludeLaunchDescription(PythonLaunchDescriptionSource(os.path.join(launch_file_dir, 'robot_state_publisher.launch.py')))
 
+    x_pos = random.uniform(-1.0, 3.0)
+    y_pos = random.uniform(-2.0, 0.0)
+    z_pos = 0.0
     spawn_bin= Node(
             package='gazebo_ros',
             executable='spawn_entity.py',
@@ -45,9 +48,9 @@ def generate_launch_description():
             arguments=[
                 '-file', bin_model_dir,
                 '-entity', 'green_bin',
-                '-x', '1.0',
-                '-y', '0.0',
-                '-z', '0.0'
+                '-x', str(x_pos),
+                '-y', str(y_pos),
+                '-z', str(z_pos)
             ]
         )
     
@@ -80,10 +83,10 @@ def generate_launch_description():
 
     ld.add_action(gzservercmd)
     ld.add_action(gzclientcmd)
-    # ld.add_action(spawn_turtlebot3)
-    # ld.add_action(robot_state_publisher)
-    # ld.add_action(spawn_bin)
-    # ld.add_action(nav_launch)
+    ld.add_action(spawn_turtlebot3)
+    ld.add_action(robot_state_publisher)
+    ld.add_action(spawn_bin)
+    ld.add_action(nav_launch)
     # ld.add_action(initial_pose_pub)
     # ld.add_action(static_transform_publisher_cmd)
 
