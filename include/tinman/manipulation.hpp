@@ -14,10 +14,17 @@
 
 #pragma once
 
+// ROS2 headers
 #include "rclcpp/rclcpp.hpp"
 #include "gazebo_msgs/srv/delete_entity.hpp"
 #include "gazebo_msgs/srv/spawn_entity.hpp"
 #include "geometry_msgs/msg/pose.hpp"
+
+//cpp headers
+#include <fstream>
+#include <ios>
+#include <sstream>
+#include <ament_index_cpp/get_package_share_directory.hpp>
 
 
 /**
@@ -25,7 +32,7 @@
  * @brief Class responsible for manipulation tasks like picking up and dropping cans.
  */
 class Manipulation {
-public:
+ public:
     /**
      * @brief Constructor for the Manipulation class.
      */
@@ -41,26 +48,19 @@ public:
      */
     void spawnCanEntity();
 
-    // /**
-    //  * @brief Drops a can into the collection bin.
-    //  */
-    // bool dropCan();
-
-    /**
-     * @brief Picks up a detected can.
-     */
-    void pickUpCan();
-
     bool dropCan;
 
 
+ private:
 
-
-private:
+    // Node for manipulation tasks
     rclcpp::Node::SharedPtr manip_node_;
+
+    // Clients for the delete and spawn services
     rclcpp::Client<gazebo_msgs::srv::DeleteEntity>::SharedPtr delete_client_;
+
+    // Client for the spawn service
     rclcpp::Client<gazebo_msgs::srv::SpawnEntity>::SharedPtr spawn_client;
     
 };
-
 #endif // MANIPULATION_HPP

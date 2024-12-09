@@ -12,32 +12,36 @@ void CanDetection::setCameraFrame(const sensor_msgs::msg::Image& frame) {
     try {
         // Convert ROS2 Image to OpenCV Mat using cv_bridge
         cv_bridge::CvImagePtr cv_ptr = cv_bridge::toCvCopy(frame, sensor_msgs::image_encodings::BGR8);
-        camera_frame = cv_ptr->image; // Store the converted OpenCV Mat
-        // Print the shape of the image
-        // std::cout << "Image shape: " 
-        //           << "Height = " << camera_frame.rows 
-        //           << ", Width = " << camera_frame.cols 
-        //           << ", Channels = " << camera_frame.channels() 
-        //           << std::endl;    
 
-    } catch (const cv_bridge::Exception& e) {
-        std::cerr << "cv_bridge exception: " << e.what() << std::endl;
+        // Store the converted OpenCV Mat
+        camera_frame = cv_ptr->image; // Store the converted OpenCV Mat
+
+    }
+
+    // Handle exceptions 
+    catch (const cv_bridge::Exception& e) {
+        RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "cv_bridge exception: %s", e.what());
     }
 }
 
+// Function to track the centroid of detected objects
 float CanDetection::trackCentroid() {
     if (camera_frame.empty()) {
-        std::cerr << "Camera frame is empty!" << std::endl;
+        RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Camera frame is empty!");
         return -1.0;
     }
 
+    // Convert image to HSV
     cv::Mat hsv_frame, mask, result;
+
     // Convert image to HSV
     cv::cvtColor(camera_frame, hsv_frame, cv::COLOR_BGR2HSV);
 
     // Define HSV range for green color (adjust based on lighting)
-    cv::Scalar lower_green(35, 100, 50); // Lower HSV boundary for green
-    cv::Scalar upper_green(85, 255, 255); // Upper HSV boundary for green
+
+    // Lower and upper bounds for green color in HSV
+    cv::Scalar lower_green(35, 100, 50);
+    cv::Scalar upper_green(85, 255, 255);
 
     // Threshold the HSV image to get only green colors
     cv::inRange(hsv_frame, lower_green, upper_green, mask);
@@ -51,27 +55,32 @@ float CanDetection::trackCentroid() {
     cv::findContours(mask, contours, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
 
     if (contours.empty()) {
-        // std::cerr << "No green objects detected!" << std::endl;
         return -1.0;
     }
 
     // Find the largest contour (assumes the can is the largest green object)
     double max_area = 0;
+
+    // Initialize the index of the largest contour
     int largest_contour_idx = -1;
     for (size_t i = 0; i < contours.size(); ++i) {
+
+        // Calculate the area of the contour
         double area = cv::contourArea(contours[i]);
-        std::cout << "Contour area: " << area << std::endl;
-        if (area > max_area && area > 10000) {
+
+        // Update the largest contour if the area is greater than the current max
+        if (area > max_area && area > 3000) {
             max_area = area;
             largest_contour_idx = static_cast<int>(i);
         }
     }
 
+    // Check if the contour area exceeds a certain threshold
     if (max_area > 1000000) {
-        std::cout << "Contour area exceeds 600000. Stopping robot." << std::endl;
         return -2.0; // Special value to indicate stop condition
     }
 
+    // Check if the largest contour was found
     if (largest_contour_idx == -1) {
         std::cerr << "Failed to identify the largest green object!" << std::endl;
         return -1.0;
@@ -82,30 +91,7 @@ float CanDetection::trackCentroid() {
 
     // Calculate the centroid of the bounding box
     float centroid_x = bounding_box.x + (bounding_box.width / 2.0);
-    float centroid_y = bounding_box.y + (bounding_box.height / 2.0);
 
-    // Draw the bounding box on the original image
-    cv::rectangle(camera_frame, bounding_box, cv::Scalar(0, 255, 0), 2); // Green bounding box
-
-    // Annotate the centroid
-    cv::circle(camera_frame, cv::Point(centroid_x, centroid_y), 5, cv::Scalar(0, 0, 255), -1); // Red circle
-    
-    // Add gridlines to the image
-    int num_lines = 10; // Number of gridlines
-    for (int i = 1; i < num_lines; ++i) {
-        // Vertical lines
-        int x = (camera_frame.cols / num_lines) * i;
-        cv::line(camera_frame, cv::Point(x, 0), cv::Point(x, camera_frame.rows), cv::Scalar(255, 255, 255), 1);
-
-        // Horizontal lines
-        int y = (camera_frame.rows / num_lines) * i;
-        cv::line(camera_frame, cv::Point(0, y), cv::Point(camera_frame.cols, y), cv::Scalar(255, 255, 255), 1);
-    }
-    // Display the result with the bounding box
-    // cv::imshow("Green Can Detection", camera_frame);
-    // cv::waitKey(1); // Allow OpenCV to process GUI events
-
-    // std::cout << "Centroid of the green can: (" << centroid_x << ", " << centroid_y << ")" << std::endl;
-
-    return centroid_x; // You can also return centroid_y if needed
+    // Display the annotated image
+    return centroid_x; 
 }

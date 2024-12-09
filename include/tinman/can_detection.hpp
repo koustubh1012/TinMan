@@ -15,7 +15,6 @@
 #pragma once 
 
 // C++ Standard Libraries
-#include <iostream>
 #include <vector>
 #include <memory>
 
@@ -23,17 +22,12 @@
 #include <opencv2/core.hpp>       // Core functionalities
 #include <opencv2/highgui.hpp>    // High-level GUI functionalities
 #include <opencv2/imgproc.hpp>    // Image processing functions
-#include <opencv2/dnn.hpp>        // Deep Neural Network module (YOLO integration)
 
 // ROS2 Core Libraries
 #include <rclcpp/rclcpp.hpp>      // ROS2 core library
 #include <sensor_msgs/msg/image.hpp>         // For raw image messages
 #include <sensor_msgs/msg/compressed_image.hpp> // For compressed image messages
 #include <sensor_msgs/msg/camera_info.hpp>   // Camera information
-#include <geometry_msgs/msg/pose.hpp>        // Geometric poses
-#include <geometry_msgs/msg/pose_stamped.hpp> // Stamped poses
-#include <nav_msgs/msg/odometry.hpp>         // Odometry information
-#include <sensor_msgs/msg/laser_scan.hpp>    // Laser scan data
 
 // CV Bridge (for image conversion between ROS and OpenCV)
 #include <cv_bridge/cv_bridge.h>
@@ -67,11 +61,6 @@ class CanDetection {
          */
         float trackCentroid();
 
-        /**
-         * @brief Retrieves the list of detected objects.
-         * @return A list of detected object names.
-         */
-        std::vector<std::string> getDetectedObjects();
 
         /**
          * @brief Sets the camera frame for processing.
