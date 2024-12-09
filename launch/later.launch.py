@@ -22,34 +22,6 @@ def generate_launch_description():
     
     map_dir = os.path.join(get_package_share_directory('tinman'), 'maps', 'cafeteria.yaml')
 
-
-    spawn_turtlebot3 = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(launch_file_dir, 'spawn_turtlebot3.launch.py')),
-        launch_arguments={'x_pose': '0.0', 'y_pose': '0.0', 'z_pose': '0.0', 'model': TURTLEBOT3_MODEL, 'use_sim_time': use_sim_time}.items()
-    )
-
-    gzservercmd= IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')),
-        launch_arguments={'world': world}.items()
-    )
-
-    gzclientcmd = IncludeLaunchDescription(PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')))
-
-    robot_state_publisher = IncludeLaunchDescription(PythonLaunchDescriptionSource(os.path.join(launch_file_dir, 'robot_state_publisher.launch.py')))
-
-    spawn_bin= Node(
-            package='gazebo_ros',
-            executable='spawn_entity.py',
-            name='spawn_green_bin_',
-            output='screen',
-            arguments=[
-                '-file', bin_model_dir,
-                '-entity', 'green_bin',
-                '-x', '1.0',
-                '-y', '0.0',
-                '-z', '0.0'
-            ]
-        )
     
     nav2_man = get_package_share_directory('turtlebot3_manipulation_navigation2')
     nav_launch = IncludeLaunchDescription(
@@ -63,12 +35,12 @@ def generate_launch_description():
     )  
     
     initial_pose_pub = ExecuteProcess(
-                cmd=[
-                    'ros2', 'topic', 'pub', '-1', '/initialpose', 'geometry_msgs/PoseWithCovarianceStamped',
-                    '{header: {frame_id: "map"}, pose: {pose: {position: {x: 0.0, y: 0.0, z: 0.0}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}}}'
-                ],
-                shell=True
-            )
+        cmd=[
+            'ros2', 'topic', 'pub', '-1', '/initialpose', 'geometry_msgs/msg/PoseWithCovarianceStamped',
+            '{header: {frame_id: "map"}, pose: {pose: {position: {x: 0.0, y: 0.0, z: 0.0}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}}}'
+        ],
+        shell=True
+    )
     
     static_transform_publisher_cmd = Node(
         package='tf2_ros',
@@ -77,14 +49,8 @@ def generate_launch_description():
     ) 
 
     ld=LaunchDescription()
-
-    ld.add_action(gzservercmd)
-    ld.add_action(gzclientcmd)
-    # ld.add_action(spawn_turtlebot3)
-    # ld.add_action(robot_state_publisher)
-    # ld.add_action(spawn_bin)
     # ld.add_action(nav_launch)
-    # ld.add_action(initial_pose_pub)
-    # ld.add_action(static_transform_publisher_cmd)
+    ld.add_action(initial_pose_pub)
+    ld.add_action(static_transform_publisher_cmd)
 
     return ld
