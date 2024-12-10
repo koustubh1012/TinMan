@@ -39,16 +39,9 @@ def generate_launch_description():
         arguments=['0', '0', '0', '0', '0', '0', 'map', 'odom']
     )
     
-    initial_pose_pub = ExecuteProcess(
-        cmd=[
-            'ros2', 'topic pub -1', '/initialpose', 'geometry_msgs/PoseWithCovarianceStamped', '"{ header: {stamp: {sec: 0, nanosec: 0}, frame_id: "map"}, pose: { pose: {position: {x: 0.0, y: 0.0, z: 0.0}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}, } }"' 
-        ],
-        shell=True
-        )
     
     ld = LaunchDescription()
     ld.add_action(turtlebot3_navigation2_cmd)
     ld.add_action(static_transform_publisher_cmd)
     ld.add_action(tinman_cmd)
-    ld.add_action(initial_pose_pub)
     return ld
