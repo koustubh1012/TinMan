@@ -29,9 +29,9 @@ class RobotNavigation : public rclcpp::Node {
   sensor_msgs::msg::LaserScan
       scan_data;  ///< Laser scan data for obstacle detection.
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr velocity_publisher_;
-  rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr
-      initial_pose_pub_;  ///< Publisher for initial pose.
+  rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initial_pose_pub_;  ///< Publisher for initial pose.
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr pose_subscription_;
+  
   geometry_msgs::msg::Pose current_pose_;  // To store the current position
 
  public:
@@ -45,6 +45,12 @@ class RobotNavigation : public rclcpp::Node {
    * @return The generated goal as a Pose.
    */
   geometry_msgs::msg::Pose generateGoal();
+
+  /**
+   * @brief Sets the initial pose of the robot.
+   * @param msg Initial pose message.
+   */
+  void set_initial_pose();
 
   /**
    * @brief Sends the navigation goal to the robot.

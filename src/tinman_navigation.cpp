@@ -20,6 +20,9 @@ RobotNavigation::RobotNavigation() : Node("robot_navigation") {
   initial_pose_pub_ =
       this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(
           "initialpose", 10);
+
+    set_initial_pose();
+
 }
 
 geometry_msgs::msg::Pose RobotNavigation::generateGoal() {
@@ -118,4 +121,17 @@ void RobotNavigation::poseCallback(
   current_pose_ = msg->pose.pose;
   RCLCPP_INFO(this->get_logger(), "Current position updated: x=%.2f, y=%.2f",
               current_pose_.position.x, current_pose_.position.y);
+}
+
+void RobotNavigation::set_initial_pose() {
+  auto message = geometry_msgs::msg::PoseWithCovarianceStamped();
+  message.header.frame_id = "map";
+  message.pose.pose.position.x = -4.0;
+  message.pose.pose.position.y = -1.0;
+  message.pose.pose.orientation.x = 0.0;
+  message.pose.pose.orientation.y = 0.0;
+  message.pose.pose.orientation.z = 0.0;
+  message.pose.pose.orientation.w = 1.0;
+  initial_pose_pub_->publish(message);
+  RCLCPP_INFO(this->get_logger(), "INITAL POSE SET");
 }
