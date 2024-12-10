@@ -14,9 +14,9 @@ TinMan is an innovative autonomous robot designed to revolutionize waste managem
 
 ## Authors
 
-1. FNU Koustubh             (120273766, koustubh@umd.edu)
-2. Keyur Borad              (120426049, kborad@umd.edu)
-3. Swaraj Mundruppady Rao   (120127007, swarajmr@umd.edu)
+1. FNU Koustubh             (Graduate Student, UMD, <koustubh@umd.edu>)
+2. Keyur Borad              (Graduate Student, UMD, <kborad@umd.edu>)
+3. Swaraj Mundruppady Rao   (Graduate Student, UMD, <swarajmr@umd.edu>)
 
 ## Purpose
 
@@ -44,7 +44,7 @@ For detailed quad chart, refer to the following presentation: [Quad Chart](https
 
 3. [Gazebo](https://classic.gazebosim.org/tutorials?tut=install_ubuntu) : Gazebo latest version was installed for deploying simulation environments and running the models in the project package. [website]
 
-## Steps to recreate the output
+## 
 
 ### Building the code
 Before running any of the following, ensure that you are in the main working directory (Root Folder of the directory). To build the project, execute the following commands
@@ -65,12 +65,7 @@ Before running any of the following, ensure that you are in the main working dir
     source /opt/ros/humble/setup.sh
     source install/setup.bash
 ```
-### Generating documentation 
-To generate and view the Doxygen documentation of the project, run the following commands.
 
-```bash
-    #Work in Progress
-```
 ### Running the Program Executable 
 
 To recreate the demo, use the following command:
