@@ -75,7 +75,7 @@ To setup and launch the Gazebo world, run the following command:
     ros2 launch tinman cafeteria_world.launch.py
 ```
 
-You should see a simulation world open with a cafteria model.
+You should see a simulation world open with a cafteria model, turtlebot and a green can. This green can will always spawen at a random position.
 
 In another terminal, source the underlay and overlay and run the following command
 
