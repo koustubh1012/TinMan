@@ -57,7 +57,7 @@ void RobotNavigation::navigateToCan(float centroid_x) {
             vel.linear.x = 0.0;
         } else {
             vel.angular.z = 0.0;
-            vel.linear.x = 0.1;
+            vel.linear.x = 0.2;
         }
     }
 
@@ -99,10 +99,10 @@ void RobotNavigation::moveToPosition(double x, double y) {
     goal_msg.pose.pose.position.x = x;
     goal_msg.pose.pose.position.y = y;
     goal_msg.pose.pose.position.z = 0.0;
-    goal_msg.pose.pose.orientation.x = 0.0;
-    goal_msg.pose.pose.orientation.y = 0.0;
-    goal_msg.pose.pose.orientation.z = 0.0;
-    goal_msg.pose.pose.orientation.w = 1.0;  // Facing forward
+    goal_msg.pose.pose.orientation.x = -0.0014;
+    goal_msg.pose.pose.orientation.y = 0.0030;
+    goal_msg.pose.pose.orientation.z = 0.4452;
+    goal_msg.pose.pose.orientation.w = 0.8954;
 
     // Send the goal and wait for result
     auto send_goal_options = rclcpp_action::Client<NavigateToPose>::SendGoalOptions();

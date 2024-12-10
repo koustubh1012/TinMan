@@ -1,7 +1,7 @@
 #include "tinman.hpp"
 
 TinMan::TinMan()
-    : Node("tinman"), goal_x(3.0), goal_y(3.0), tolerance(0.4), nav_to_bin(false) {
+    : Node("tinman"), goal_x(3.9), goal_y(5.9), tolerance(0.4), nav_to_bin(false) {
 
     image_sub_ = this->create_subscription<sensor_msgs::msg::Image>(
         "/camera/image_raw", 10,
@@ -67,3 +67,5 @@ void TinMan::testNavigation(double x, double y) {
     RCLCPP_INFO(this->get_logger(), "Moving to position x: %.2f, y: %.2f", x, y);
     nav_obj_->moveToPosition(x, y);
 }
+
+

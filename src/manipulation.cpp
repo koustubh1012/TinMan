@@ -78,9 +78,9 @@ void Manipulation::spawnCanEntity() {
 
     // Set the spawn pose (position and orientation)
     geometry_msgs::msg::Pose spawn_pose;
-    spawn_pose.position.x = -4.0;
-    spawn_pose.position.y = -2.0;
-    spawn_pose.position.z = 10.0;
+    spawn_pose.position.x = 4.26;
+    spawn_pose.position.y = 6.59;
+    spawn_pose.position.z = 1.5;
     spawn_pose.orientation.w = 1.0;
 
     // Set the initial pose of the entity

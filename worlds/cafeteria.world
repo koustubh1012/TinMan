@@ -1588,10 +1588,10 @@
       <pose>0.224871 4.58947 0 0 -0 0</pose>
     </model>
     <state world_name='default'>
-      <sim_time>442 677000000</sim_time>
-      <real_time>444 470304529</real_time>
-      <wall_time>1733545151 206426502</wall_time>
-      <iterations>442677</iterations>
+      <sim_time>723 570000000</sim_time>
+      <real_time>167 638742477</real_time>
+      <wall_time>1733788933 815750917</wall_time>
+      <iterations>166900</iterations>
       <model name='bookshelf'>
         <pose>4.26586 -2.64744 0 0 -0 3.13802</pose>
         <scale>1 1 1</scale>
@@ -1627,6 +1627,16 @@
         <scale>1 1 1</scale>
         <link name='cabinet_bottom_plate'>
           <pose>0.224871 4.58947 0 0 0 -3.10237</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='cafe_table'>
+        <pose>4.2661 6.59214 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>4.2661 6.59214 0 0 -0 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
@@ -1703,13 +1713,13 @@
         </link>
       </model>
       <model name='person_standing'>
-        <pose>4.0199 -1.57578 0 1e-06 -1e-06 -0.001273</pose>
+        <pose>4.01982 -1.57578 -0 -1e-06 -1e-06 -0.000469</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>4.0199 -1.57578 0 1e-06 -1e-06 -0.001273</pose>
+          <pose>4.01982 -1.57578 -0 -1e-06 -1e-06 -0.000469</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>2.18482 1.51959 1.40451 1.48996 0.877833 -3.09613</acceleration>
-          <wrench>174.785 121.567 112.361 0 -0 0</wrench>
+          <acceleration>-1.61134 1.13462 -1.50273 1.93555 -1.45377 -3.09675</acceleration>
+          <wrench>-128.907 90.7699 -120.218 0 -0 0</wrench>
         </link>
       </model>
       <model name='table_marble'>
@@ -1728,10 +1738,89 @@
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose>-14.0774 -2.50159 15.3648 -0 0.741795 0.070585</pose>
+        <pose>-1.45248 -9.32142 21.9398 -0 1.0858 1.02658</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
     </gui>
+    <model name='cafe_table'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='surface'>
+          <pose>0 0 0.755 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>0.913 0.913 0.04</size>
+            </box>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='column'>
+          <pose>0 0 0.37 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>0.042 0.042 0.74</size>
+            </box>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='base'>
+          <pose>0 0 0.02 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>0.56 0.56 0.04</size>
+            </box>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>model://cafe_table/meshes/cafe_table.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <pose>-4.46474 -2.13571 0 0 -0 0</pose>
+    </model>
   </world>
 </sdf>
