@@ -1,7 +1,12 @@
 /**
- * @file robot_navigation.hpp
- * @brief Header file for the RobotNavigation class, handling navigation
- * functionalities.
+ * @file tinman_navigation.hpp
+ * @author Keyur Borad, FNU Koustubh, Swaraj Rao (kborad@umd.edu)
+ * @brief This file contains the declaration of the RobotNavigation class, which is responsible for navigation-related tasks.
+ * @version 0.1
+ * @date 2024-12-10
+ * 
+ * @copyright Copyright (c) 2024
+ * 
  */
 
 #ifndef TINMAN_NAVIGATION_HPP
@@ -24,14 +29,8 @@
  */
 class RobotNavigation : public rclcpp::Node {
  private:
-  geometry_msgs::msg::Pose
-      target_position;  ///< Target position for navigation.
-  sensor_msgs::msg::LaserScan
-      scan_data;  ///< Laser scan data for obstacle detection.
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr velocity_publisher_;
   rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initial_pose_pub_;  ///< Publisher for initial pose.
-  rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr pose_subscription_;
-  
   geometry_msgs::msg::Pose current_pose_;  // To store the current position
 
  public:
@@ -40,11 +39,6 @@ class RobotNavigation : public rclcpp::Node {
    */
   RobotNavigation();
 
-  /**
-   * @brief Generates a navigation goal.
-   * @return The generated goal as a Pose.
-   */
-  geometry_msgs::msg::Pose generateGoal();
 
   /**
    * @brief Sets the initial pose of the robot.
@@ -53,34 +47,31 @@ class RobotNavigation : public rclcpp::Node {
   void set_initial_pose();
 
   /**
-   * @brief Sends the navigation goal to the robot.
-   */
-  void sendNavGoal();
-
-  /**
-   * @brief Cancels the current navigation goal.
-   */
-  void cancelNavGoal();
-
-  /**
-   * @brief Controls the robot's navigation behavior.
-   */
-  void tinmanController();
-
-  /**
    * @brief Navigates the robot to a detected can.
    * @param distance Distance to the detected can.
    */
   void navigateToCan(float distance);
-
+/**
+ * @brief A methoid to move the robot to a specific position.
+ * 
+ * @param x double
+ * @param y double
+ */
   void moveToPosition(double x, double y);
-
+/**
+ * @brief Get the Current Position object
+ * 
+ * @return geometry_msgs::msg::Pose 
+ */
   geometry_msgs::msg::Pose getCurrentPosition() const;
 
+/**
+ * @brief Callback function for the pose subscriber.
+ * 
+ * @param msg 
+ */
   void poseCallback(const nav_msgs::msg::Odometry::SharedPtr msg);
 
-  // void poseCallback(const
-  // geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg);
 };
 
 #endif  // TINMAN_NAVIGATION_HPP

@@ -7,43 +7,24 @@
 #include <rclcpp_action/rclcpp_action.hpp>
 
 RobotNavigation::RobotNavigation() : Node("robot_navigation") {
+  // Create a publisher for velocity commands
   velocity_publisher_ =
       this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
-  // pose_subscription_ =
-  // this->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
-  //             "/amcl_pose", 10, std::bind(&RobotNavigation::poseCallback,
-  //             this, std::placeholders::_1));
-  pose_subscription_ = this->create_subscription<nav_msgs::msg::Odometry>(
-      "/odom", 10,
-      std::bind(&RobotNavigation::poseCallback, this, std::placeholders::_1));
-
+  //Create a publisher for initial pose
   initial_pose_pub_ =
       this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(
           "initialpose", 10);
-
-    set_initial_pose();
+  //Calling the set_initial_pose method
+  set_initial_pose();
 
 }
-
-geometry_msgs::msg::Pose RobotNavigation::generateGoal() {
-  // Stub for generating a navigation goal
-  return geometry_msgs::msg::Pose();
-}
+//Metjod to get the current position of the robot
 geometry_msgs::msg::Pose RobotNavigation::getCurrentPosition() const {
   return current_pose_;
 }
-void RobotNavigation::sendNavGoal() {
-  // Stub for sending a navigation goal
-}
 
-void RobotNavigation::cancelNavGoal() {
-  // Stub for cancelling a navigation goal
-}
 
-void RobotNavigation::tinmanController() {
-  // Stub for controlling the robot
-}
-
+//Method to navigate the robot to a detected can
 void RobotNavigation::navigateToCan(float centroid_x) {
   auto vel = geometry_msgs::msg::Twist();
   if (centroid_x == -2.0) {
@@ -72,6 +53,7 @@ void RobotNavigation::navigateToCan(float centroid_x) {
   velocity_publisher_->publish(vel);
 }
 
+//Method to move the robot to a specific position
 void RobotNavigation::moveToPosition(double x, double y) {
   using NavigateToPose = nav2_msgs::action::NavigateToPose;
 
@@ -116,6 +98,7 @@ void RobotNavigation::moveToPosition(double x, double y) {
   action_client->async_send_goal(goal_msg, send_goal_options);
 }
 
+//Callback function for the pose subscriber
 void RobotNavigation::poseCallback(
     const nav_msgs::msg::Odometry::SharedPtr msg) {
   current_pose_ = msg->pose.pose;
@@ -123,6 +106,7 @@ void RobotNavigation::poseCallback(
               current_pose_.position.x, current_pose_.position.y);
 }
 
+//Method to set the initial pose of the robot
 void RobotNavigation::set_initial_pose() {
   auto message = geometry_msgs::msg::PoseWithCovarianceStamped();
   message.header.frame_id = "map";
