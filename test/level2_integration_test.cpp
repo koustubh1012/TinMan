@@ -1,15 +1,16 @@
 /**
  * @file level2_integration_test.cpp
- * @brief This cpp file is a level2 integration file to verify the unit test of publishing topic "cmd_vel"
+ * @brief This cpp file is a level2 integration file to verify the unit test of
+ * publishing topic "cmd_vel"
  */
 
 #include <catch_ros2/catch_ros2.hpp>
 #include <chrono>
+#include <geometry_msgs/msg/twist.hpp>
 #include <rclcpp/executors.hpp>
 #include <rclcpp/logging.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
-#include <geometry_msgs/msg/twist.hpp>
 
 using namespace std::chrono_literals;
 using std_msgs::msg::String;
@@ -28,9 +29,9 @@ class MyTestsFixture {
    * @brief Construct a new MyTestsFixture object
    */
   MyTestsFixture() {
-
     testerNode = rclcpp::Node::make_shared("Level2IntegrationTest");
-    Logger = testerNode->get_logger();  // Ensure messages will appear in rqt_console
+    Logger =
+        testerNode->get_logger();  // Ensure messages will appear in rqt_console
 
     testerNode->declare_parameter<double>("test_duration");
 
@@ -42,8 +43,7 @@ class MyTestsFixture {
     rclcpp::sleep_for(3s);  // Sleep for 1 second
 
     subscriber = testerNode->create_subscription<geometry_msgs::msg::Twist>(
-        "cmd_vel", 10,
-        [this](const geometry_msgs::msg::Twist &msg) {
+        "cmd_vel", 10, [this](const geometry_msgs::msg::Twist &msg) {
           RCLCPP_INFO(Logger, "INSIDE CALLBACK");
         });
 
@@ -53,8 +53,7 @@ class MyTestsFixture {
     if (publisher_count > 0) {
       RCLCPP_INFO_STREAM(Logger, "Found publisher for topic " << topic_name);
       got_topic = true;
-    }
-    else {
+    } else {
       RCLCPP_INFO_STREAM(Logger, "No publisher found for topic " << topic_name);
     }
   }
@@ -73,24 +72,24 @@ class MyTestsFixture {
 ////////////////////////////////////////////////
 
 TEST_CASE_METHOD(MyTestsFixture, "test topic cmd_vel", "[topic]") {
-
   rclcpp::Rate rate(5.0);  // 5Hz checks
   auto start_time = rclcpp::Clock().now();
   auto duration = rclcpp::Clock().now() - start_time;
   auto timeout = rclcpp::Duration::from_seconds(TEST_DURATION);
 
-  RCLCPP_INFO_STREAM(Logger, "Starting test: duration = " << duration.seconds()
-                                                          << " timeout=" << timeout.seconds());
+  RCLCPP_INFO_STREAM(
+      Logger, "Starting test: duration = " << duration.seconds()
+                                           << " timeout=" << timeout.seconds());
 
   while (!got_topic && (duration < timeout)) {
     rclcpp::spin_some(testerNode);  // Process callbacks
-    rate.sleep();  // Sleep for the defined rate
+    rate.sleep();                   // Sleep for the defined rate
     duration = rclcpp::Clock().now() - start_time;
   }
 
-  RCLCPP_INFO_STREAM(Logger, "Test finished: duration = " << duration.seconds()
-                                                          << ", got_topic = " << std::boolalpha
-                                                          << got_topic);
+  RCLCPP_INFO_STREAM(Logger, "Test finished: duration = "
+                                 << duration.seconds() << ", got_topic = "
+                                 << std::boolalpha << got_topic);
 
   // Assert that a valid topic is published
   CHECK(got_topic);
