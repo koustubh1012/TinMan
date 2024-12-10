@@ -20,6 +20,8 @@ find_package(catch_ros2 REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(nav2_msgs REQUIRED)
 find_package(ament_index_cpp REQUIRED)
+find_package(GTest REQUIRED)
+find_package(Doxygen REQUIRED)
 
 
 ###################################################

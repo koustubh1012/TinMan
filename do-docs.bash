@@ -20,17 +20,9 @@ set +u                          # stop checking undefined variable
 source /opt/ros/humble/setup.bash
 set -u                          # re-enable undefined variable check
 
-# ###############################
-# # 2. run my_model's "docs" target
-# ###############################
-# colcon build \
-#        --event-handlers console_cohesion+ \
-#        --packages-select my_model \
-#        --cmake-target "docs"
-# ##echo "open src/my_model/docs/html/index.html"
 
 ###############################
-# 3. run tinman's "docs" target
+# 2. run tinman's "docs" target
 ###############################
 colcon build \
        --event-handlers console_cohesion+ \
@@ -39,7 +31,7 @@ colcon build \
 ##echo "open src/tinman/docs/html/index.html"
 
 ###############################
-# 4. combine all docs
+# 3. combine all docs
 ###############################
 DOCS_DIR=src/docs/
 pandoc -f markdown $DOCS_DIR/index.md > $DOCS_DIR/index.html
