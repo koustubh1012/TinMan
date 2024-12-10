@@ -5,9 +5,9 @@
  * @date November 18, 2024
  * @version 1.0
  * @copyright MIT License
- * @contributors : 1. Swaraj Mundruppady Rao
- *                 2. Koustubh
- *                 3. Keyur Borad
+ * @author : 1. Swaraj Mundruppady Rao
+ *           2. Koustubh
+ *           3. Keyur Borad
  */
 
 #ifndef CAN_DETECTION_HPP
