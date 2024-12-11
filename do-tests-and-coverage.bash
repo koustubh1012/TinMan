@@ -60,8 +60,15 @@ colcon test-result --test-result-base build/tinman
 ##############################
 # 4. generate individual coverage reports:
 ##############################
-ros2 run tinman generate_coverage_report.bash
-MY_CONTROLLER_COVERAGE_INFO=./build/tinman/test_coverage.info
+colcon build \
+       --event-handlers console_cohesion+ \
+       --packages-select tinman \
+       --cmake-target "test_coverage" \
+       --cmake-arg -DUNIT_TEST_ALREADY_RAN=1
+MY_MODEL_COVERAGE_INFO=./build/tinman/test_coverage.info
+
+# ros2 run tinman generate_coverage_report.bash
+# MY_CONTROLLER_COVERAGE_INFO=./build/tinman/test_coverage.info
 
 ##############################
 # 5. Combine coverage reports

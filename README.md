@@ -12,7 +12,7 @@
 
 TinMan is an innovative autonomous robot designed to revolutionize waste management in cafeteria settings by collecting discarded aluminum cans. Developed by ACME Robotics, TinMan is an efficient, hygienic, and sustainable solution that reduces labor costs, promotes recycling, and addresses the challenges of dynamic and cluttered environments.
 
-![TinMan Demo Video](./video/demo.webm)
+![TinMan Demo Video](https://youtu.be/TGAY0hNBtcA?si=VDqHQInRi7B3uwuQ)
 
 ## Authors
 

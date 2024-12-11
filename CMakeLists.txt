@@ -34,6 +34,44 @@ if(COVERAGE)
   set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE "ON")
 endif()
 
+option(WANT_COVERAGE "this option enable coverage" ON)
+if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")
+  set(WANT_COVERAGE OFF)
+endif()
+
+if(WANT_COVERAGE)
+  message("Enabling coverage")
+  list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-modules")
+  include(CodeCoverage)
+  # The following line come from cmake-modules/CodeCoverage.cmake
+  append_coverage_compiler_flags() # will add "--coverage" compilation flag
+  # Exclude certain directories from coverage analysis
+  set(COVERAGE_EXCLUDES
+    ${PROJECT_BINARY_DIR}
+    )
+endif()
+
+# create targets for building code coverage reports
+if(WANT_COVERAGE)
+  if(UNIT_TEST_ALREADY_RUN)
+    unset(EXECUTABLE)          # don't run unit test again, just generate the coverage report
+  else()
+    set(EXECUTABLE ctest test/)   # what to run insdie the build directory?
+  endif()
+  # unit test coverage:
+  setup_target_for_coverage_lcov ( # use lcov to generate coverage report
+    NAME test_coverage             # target name
+    EXECUTABLE ${EXECUTABLE}
+    EXCLUDE
+      "/usr/include/*"                     # Don't analyze system headers
+      "/opt/*"                             # Don't analyze system headers
+      "*/can_detection.cpp"                # Don't analyze system headers
+      "*/manipulation.cpp"                 # Don't analyze system headers
+      "*/tinman_navigation.cpp"            # Don't analyze system headers
+      "*/tinman.cpp"                       # Don't analyze system headers
+    )
+endif()
+
 
 if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
