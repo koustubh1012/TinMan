@@ -9,10 +9,9 @@
 ## Acme Robotics (Tinman) A Mobile Autonomous Robot for Collection of Waste in Cafeteria
 
 ## Overview
-
 TinMan is an innovative autonomous robot designed to revolutionize waste management in cafeteria settings by collecting discarded aluminum cans. Developed by ACME Robotics, TinMan is an efficient, hygienic, and sustainable solution that reduces labor costs, promotes recycling, and addresses the challenges of dynamic and cluttered environments.
 
-![TinMan Demo Video](https://youtu.be/TGAY0hNBtcA?si=VDqHQInRi7B3uwuQ)
+[![TinMan Demo Video](https://img.youtube.com/vi/TGAY0hNBtcA/0.jpg)](https://youtu.be/TGAY0hNBtcA?si=VDqHQInRi7B3uwuQ)
 
 ## Authors
 
@@ -90,12 +89,12 @@ In another terminal, source the underlay and overlay and run the following comma
 To generate the code coverage report, run the following command
 
 ```bash
-    rm -rf build/ install/
-    colcon build --cmake-args -DCOVERAGE=1 
-    source install/setup.bash
-    colcon test
-    ros2 run tinman generate_coverage_report.bash
-    open build/tinman/test_coverage/index.html 
+    colcon build \
+       --event-handlers console_cohesion+ \
+       --packages-select tinman \
+       --cmake-target "test_coverage" \
+       --cmake-arg -DUNIT_TEST_ALREADY_RUN=1
+    open build/tinman/test_coverage/index.html
 ```
 
 ### To run the tests
