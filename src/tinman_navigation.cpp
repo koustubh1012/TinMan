@@ -10,21 +10,19 @@ RobotNavigation::RobotNavigation() : Node("robot_navigation") {
   // Create a publisher for velocity commands
   velocity_publisher_ =
       this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
-  //Create a publisher for initial pose
+  // Create a publisher for initial pose
   initial_pose_pub_ =
       this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(
           "initialpose", 10);
-  //Calling the set_initial_pose method
+  // Calling the set_initial_pose method
   set_initial_pose();
-
 }
-//Metjod to get the current position of the robot
+// Metjod to get the current position of the robot
 geometry_msgs::msg::Pose RobotNavigation::getCurrentPosition() const {
   return current_pose_;
 }
 
-
-//Method to navigate the robot to a detected can
+// Method to navigate the robot to a detected can
 void RobotNavigation::navigateToCan(float centroid_x) {
   auto vel = geometry_msgs::msg::Twist();
   if (centroid_x == -2.0) {
@@ -53,7 +51,7 @@ void RobotNavigation::navigateToCan(float centroid_x) {
   velocity_publisher_->publish(vel);
 }
 
-//Method to move the robot to a specific position
+// Method to move the robot to a specific position
 void RobotNavigation::moveToPosition(double x, double y) {
   using NavigateToPose = nav2_msgs::action::NavigateToPose;
 
@@ -98,7 +96,7 @@ void RobotNavigation::moveToPosition(double x, double y) {
   action_client->async_send_goal(goal_msg, send_goal_options);
 }
 
-//Callback function for the pose subscriber
+// Callback function for the pose subscriber
 void RobotNavigation::poseCallback(
     const nav_msgs::msg::Odometry::SharedPtr msg) {
   current_pose_ = msg->pose.pose;
@@ -106,7 +104,7 @@ void RobotNavigation::poseCallback(
               current_pose_.position.x, current_pose_.position.y);
 }
 
-//Method to set the initial pose of the robot
+// Method to set the initial pose of the robot
 void RobotNavigation::set_initial_pose() {
   auto message = geometry_msgs::msg::PoseWithCovarianceStamped();
   message.header.frame_id = "map";

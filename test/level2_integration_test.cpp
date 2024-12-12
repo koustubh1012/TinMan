@@ -43,7 +43,8 @@ class MyTestsFixture {
     rclcpp::sleep_for(3s);  // Sleep for 1 second
 
     subscriber = testerNode->create_subscription<geometry_msgs::msg::Twist>(
-        "cmd_vel", 10, [this](const geometry_msgs::msg::Twist &msg) {(void)msg;});
+        "cmd_vel", 10,
+        [this](const geometry_msgs::msg::Twist &msg) { (void)msg; });
 
     std::string topic_name = "/cmd_vel";
     size_t publisher_count = testerNode->count_publishers(topic_name);
