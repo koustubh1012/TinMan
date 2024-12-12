@@ -9,14 +9,15 @@
 ## Acme Robotics (Tinman) A Mobile Autonomous Robot for Collection of Waste in Cafeteria
 
 ## Overview
-
 TinMan is an innovative autonomous robot designed to revolutionize waste management in cafeteria settings by collecting discarded aluminum cans. Developed by ACME Robotics, TinMan is an efficient, hygienic, and sustainable solution that reduces labor costs, promotes recycling, and addresses the challenges of dynamic and cluttered environments.
+
+[![TinMan Demo Video](https://img.youtube.com/vi/TGAY0hNBtcA/0.jpg)](https://youtu.be/TGAY0hNBtcA?si=VDqHQInRi7B3uwuQ)
 
 ## Authors
 
-1. FNU Koustubh             (120273766, koustubh@umd.edu)
-2. Keyur Borad              (120426049, kborad@umd.edu)
-3. Swaraj Mundruppady Rao   (120127007, swarajmr@umd.edu)
+1. FNU Koustubh             (Graduate Student, UMD, <koustubh@umd.edu>)
+2. Keyur Borad              (Graduate Student, UMD, <kborad@umd.edu>)
+3. Swaraj Mundruppady Rao   (Graduate Student, UMD, <swarajmr@umd.edu>)
 
 ## Purpose
 
@@ -44,9 +45,10 @@ For detailed quad chart, refer to the following presentation: [Quad Chart](https
 
 3. [Gazebo](https://classic.gazebosim.org/tutorials?tut=install_ubuntu) : Gazebo latest version was installed for deploying simulation environments and running the models in the project package. [website]
 
-## Steps to recreate the output
+## Cloning and Running the Simulation
 
 ### Building the code
+
 Before running any of the following, ensure that you are in the main working directory (Root Folder of the directory). To build the project, execute the following commands
 
 ```bash
@@ -65,34 +67,96 @@ Before running any of the following, ensure that you are in the main working dir
     source /opt/ros/humble/setup.sh
     source install/setup.bash
 ```
-### Generating documentation 
-To generate and view the Doxygen documentation of the project, run the following commands.
+
+### Running the Simulation
+
+To setup and launch the Gazebo world, run the following command:
 
 ```bash
-    #Work in Progress
-```
-### Running the Program Executable 
-
-To recreate the demo, use the following command:
-
-```bash
-    #work in progress
+    ros2 launch tinman cafeteria_world.launch.py
 ```
 
-### To run the tests 
-Test Driven Development process was followed and the unit tests can be run by the following command:
+You should see a simulation world open with a cafteria model, turtlebot and a green can. This green can will always spawen at a random position.
+
+In another terminal, source the underlay and overlay and run the following command
 
 ```bash
-    cd ~/ros_ws
+    ros2 launch tinman tinman.launch.py
+```
+
+### Code Coverage report
+
+To generate the code coverage report, run the following command
+
+```bash
+    colcon build \
+       --event-handlers console_cohesion+ \
+       --packages-select tinman \
+       --cmake-target "test_coverage" \
+       --cmake-arg -DUNIT_TEST_ALREADY_RUN=1
+    open build/tinman/test_coverage/index.html
+```
+
+### To run the tests
+
+Test Driven Development process was followed and the unit and level 2 integration tests can be run by the following command:
+
+```bash
     colcon test --packages-select tinman
+    cat log/latest_test/tinman/stdout.log 
+```
 
+### Generate doxygen documentation
+
+To generate the doxygen documentation, run the following commands
+
+```bash
+    cd ros_ws/src/TinMan
+    ./do-docs.bash
+    # To open the documentation
+    open build/tinman/test_coverage/index.html 
+```
+
+## Clang-Formating
+
+```bash
+cd ~/ros_ws
+#Clang-format 
+clang-format -i --style=Google $(find . -name *.cpp -o -name *.hpp | grep -v "/build/")
+```
+
+## Cpp-Lint
+
+```bash
+# go to your ros2 workspace directory
+cd ~/ros_ws/src
+#Cpp Lint
+cpplint --filter=-legal/copyright,-build/c++11,+build/c++17,-build/namespaces,-build/include_order $(find . -name *.cpp | grep -v "/build/")
+```
+
+## Clang-tidy
+
+```bash
+cd ~/ros_ws
+# Build the workspace again with the camake args to generate compile_commands.jason file for Clang-tidy to work
+colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+#Clang-tidy command
+clang-tidy -p build/tinman --extra-arg=-std=c++17 src/TinMan/src/*.cpp -header-filter=.*
 ```
 
 ## Known Issues / bugs
-There was an issue before of not executing the level 2 integration test. This was mainly due to the name conflict of package and executable. They should not be same. 
-    
+
+1. There was an issue before of not executing the level 2 integration test. This was mainly due to the name conflict of package and executable. They should not be same.
+2. The turtlebot does not recognise the can sometimes, if it's too far away from it's position.
+3. The code coverage build fails because of codecoverage library not found.
+4. Ingnition gazebo models fail to load.
+5. Colcon test failed soemtimes because the test node "tinman" does not initialise in time
+6. The Nav2 navigation stack sometimes sticks and the robot's trajectory is not updated in real time, which may lead to collissions.
+
 ## License
+
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Disclaimer
+
 This software is provided "as is," without any warranties or conditions, express or implied. By using this software, you acknowledge that Acme Robotics is not liable for any damages or issues arising from its use. Users are responsible for ensuring the software’s suitability and safety for their specific applications, especially in environments with humans.
